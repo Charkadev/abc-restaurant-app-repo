@@ -1,0 +1,44 @@
+package com.abcrest.abcRestaurant.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
+import java.util.List;
+
+@Document(collection = "orders")  // MongoDB collection name
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Order {
+
+    @Id  // MongoDB automatically generates an ObjectId
+    private String id;  // Changed to String to store MongoDB ObjectId
+
+    @DBRef  // Reference to the User document
+    private User customer;
+
+    @JsonIgnore
+    @DBRef  // Reference to the Restaurant document
+    private Restaurant restaurant;
+
+    private Long totalAmount;
+    private String orderStatus;
+    private Date createdAt;
+
+    @DBRef  // Reference to the Address document
+    private Address deliveryAddress;
+
+    @DBRef  // References to OrderItem documents
+    private List<OrderItem> items;
+
+    // private Payment payment -- can be added later
+
+    private int totalItem;
+    private int totalPrice;
+}

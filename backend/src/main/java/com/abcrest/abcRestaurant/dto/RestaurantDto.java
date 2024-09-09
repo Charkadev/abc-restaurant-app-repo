@@ -6,10 +6,9 @@ import java.util.List;
 @Data
 public class RestaurantDto {
 
+    private String id;  // Change this from Long to String for MongoDB compatibility
+
     private String title;
-
-    private List<String> images;  // MongoDB supports storing lists directly
-
     private String description;
-    private Long id;  // Assuming this is an identifier for reference, but typically MongoDB uses String for _id
+    private List<String> images;
 }

@@ -21,6 +21,7 @@ public interface RestaurantService {
 
     Restaurant findRestaurantById(String id) throws Exception;
 
+    // Using String for MongoDB ObjectId instead of Long
     Restaurant findRestaurantByUserId(String userId) throws Exception;
 
     RestaurantDto addToFavorites(String restaurantId, User user) throws Exception;

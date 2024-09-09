@@ -80,10 +80,10 @@ public class RestaurantServiceImp implements RestaurantService {
         return opt.get();
     }
 
-    // New method implementation for finding a restaurant by userId
+    // Updated method to fetch restaurant by userId (String for MongoDB ObjectId)
     @Override
     public Restaurant findRestaurantByUserId(String userId) throws Exception {
-        Restaurant restaurant = restaurantRepository.findByOwnerId(userId);  // Assuming this is implemented in the repository
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userId);  // MongoDB ObjectId (String)
         if (restaurant == null) {
             throw new Exception("Restaurant not found for user ID: " + userId);
         }
@@ -92,13 +92,13 @@ public class RestaurantServiceImp implements RestaurantService {
 
     @Override
     public RestaurantDto addToFavorites(String restaurantId, User user) throws Exception {
-        Restaurant restaurant = findRestaurantById(String.valueOf(restaurantId));
+        Restaurant restaurant = findRestaurantById(restaurantId);  // MongoDB ObjectId is already a String
 
         RestaurantDto dto = new RestaurantDto();
         dto.setDescription(restaurant.getDescription());
         dto.setImages(restaurant.getImages());
         dto.setTitle(restaurant.getName());
-        dto.setId(restaurantId);
+        dto.setId(restaurantId);  // MongoDB ObjectId (String)
 
         boolean isFavorited = false;
         List<RestaurantDto> favorites = user.getFavorites();

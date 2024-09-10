@@ -6,10 +6,10 @@ import com.abcrest.abcRestaurant.request.AddCartItemRequest;
 
 public interface CartService {
     CartItem addItemToCart(AddCartItemRequest req, String jwt) throws Exception;
-    CartItem updateCartItemQuantitiy(String cartItemId, int quantity) throws Exception;  // Change Long to String
-    Cart removeItemFromCart(String cartItemId, String jwt) throws Exception;  // Change Long to String
+    CartItem updateCartItemQuantitiy(String cartItemId, int quantity) throws Exception;  // Changed Long to String
+    Cart removeItemFromCart(String cartItemId, String jwt) throws Exception;  // Changed Long to String
     Long calculateCartTotals(Cart cart) throws Exception;
-    Cart findCartById(String id) throws Exception;  // Change Long to String
-    Cart findCartByUserId(String jwt) throws Exception;
-    Cart clearCart(String jwt) throws Exception;
+    Cart findCartById(String id) throws Exception;  // Changed Long to String
+    Cart findCartByUserId(String userId) throws Exception;  // Changed Long to String
+    Cart clearCart(String userId) throws Exception;  // Changed Long to String
 }

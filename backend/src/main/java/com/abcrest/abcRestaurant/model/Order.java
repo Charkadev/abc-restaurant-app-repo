@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "orders")  // MongoDB collection name
+@Document(collection = "orders")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,8 +37,6 @@ public class Order {
     @DBRef  // References to OrderItem documents
     private List<OrderItem> items;
 
-    // private Payment payment -- can be added later
-
     private int totalItem;
-    private int totalPrice;
+    private Long totalPrice;
 }

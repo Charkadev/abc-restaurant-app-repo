@@ -29,7 +29,6 @@ public class CartServiceImp implements CartService {
     @Override
     public CartItem addItemToCart(AddCartItemRequest req, String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        // Use getFoodId() and other getters from AddCartItemRequest
         Food food = foodRepository.findById(req.getFoodId()).orElseThrow(() -> new Exception("Food not found"));
         Cart cart = cartRepository.findByCustomerId(user.getId());
 
@@ -82,14 +81,15 @@ public class CartServiceImp implements CartService {
     }
 
     @Override
-    public Cart findCartByUserId(String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
-        return cartRepository.findByCustomerId(user.getId());
+    public Cart findCartByUserId(String userId) throws Exception {
+        Cart cart = cartRepository.findByCustomerId(userId);
+        cart.setTotal(calculateCartTotals(cart));
+        return cart;
     }
 
     @Override
-    public Cart clearCart(String jwt) throws Exception {
-        Cart cart = findCartByUserId(jwt);
+    public Cart clearCart(String userId) throws Exception {
+        Cart cart = findCartByUserId(userId);
         cart.getItems().clear();
         return cartRepository.save(cart);
     }

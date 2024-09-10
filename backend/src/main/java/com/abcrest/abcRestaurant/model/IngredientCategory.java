@@ -26,6 +26,7 @@ public class IngredientCategory {
     @DBRef  // Reference to the Restaurant document
     private Restaurant restaurant;
 
+    @JsonIgnore
     @DBRef  // References to IngredientsItem documents
     private List<IngredientsItem> ingredients = new ArrayList<>();
 }

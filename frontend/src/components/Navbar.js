@@ -25,25 +25,25 @@ const Navbar = () => {
         <Link to="/contact" className="navbar-link">Contact</Link>
       </div>
       <div className="navbar-right">
-        {/* Cart button for customers */}
+        {/* Cart button with only the icon */}
+        <Link to="/cart" className="navbar-link navbar-cart">
+          <i className="fas fa-shopping-cart"></i>
+        </Link>
+
+        {/* Conditional rendering for logged-in user options */}
         {token && role === 'CUSTOMER' && (
-          <>
-            <Link to="/cart" className="navbar-link navbar-cart">Cart</Link>
-            <Link to="/profile" className="navbar-link">Profile</Link>
-          </>
+          <Link to="/profile" className="navbar-link">Profile</Link>
         )}
 
-        {/* Staff dashboard link */}
         {token && role === 'RESTAURANT_STAFF' && (
           <Link to="/dashboard/staff" className="navbar-link">Staff Dashboard</Link>
         )}
 
-        {/* Admin dashboard link */}
         {token && role === 'ADMIN' && (
           <Link to="/dashboard/admin" className="navbar-link">Admin Dashboard</Link>
         )}
 
-        {/* Login/Register links or Logout button */}
+        {/* Login/Register or Logout */}
         {token ? (
           <button className="navbar-button" onClick={handleLogout}>Logout</button>
         ) : (

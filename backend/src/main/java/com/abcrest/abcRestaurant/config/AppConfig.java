@@ -25,6 +25,8 @@ public class AppConfig {
 
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // Permit access to register and login endpoints without authentication
+                        .requestMatchers("/auth/signup", "/auth/login").permitAll()
                         // Only users with Admin role can access /api/admin/**
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Restaurant staff and Admins can access /api/staff/**
@@ -35,7 +37,7 @@ public class AppConfig {
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())  // Disable CSRF for API calls
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
@@ -46,12 +48,12 @@ public class AppConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration cfg = new CorsConfiguration();
-                cfg.setAllowedOrigins(Arrays.asList("https://localhost:3000")); // Frontend origin
+                cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000"));  // Allow correct origin (non-SSL)
                 cfg.setAllowedMethods(Collections.singletonList("*"));  // Allow all methods (GET, POST, etc.)
                 cfg.setAllowCredentials(true);
                 cfg.setAllowedHeaders(Collections.singletonList("*"));  // Allow all headers
-                cfg.setExposedHeaders(Arrays.asList("Authorization"));  // Expose the Authorization header
-                cfg.setMaxAge(3600L);  // Cache the configuration for 1 hour
+                cfg.setExposedHeaders(Arrays.asList("Authorization"));  // Expose Authorization header
+                cfg.setMaxAge(3600L);  // Cache CORS configuration for 1 hour
                 return cfg;
             }
         };

@@ -46,12 +46,14 @@ public class AuthController {
     private CartRepository cartRepository;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
+    public ResponseEntity<?> createUserHandler(@RequestBody User user) {
         User isEmailExist = userRepository.findByEmail(user.getEmail());
         if (isEmailExist != null) {
-            throw new Exception("Email is already in use with another account");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Email is already in use with another account");
         }
 
+        // Hash the password before saving the user
         User createdUser = new User();
         createdUser.setEmail(user.getEmail());
         createdUser.setFullName(user.getFullName());
@@ -60,15 +62,19 @@ public class AuthController {
 
         User savedUser = userRepository.save(createdUser);
 
+        // Create a cart for the user
         Cart cart = new Cart();
         cart.setCustomer(savedUser);
         cartRepository.save(cart);
 
+        // Authenticate the newly created user
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Generate JWT token
         String jwt = jwtProvider.generateToken(authentication);
 
+        // Create the response object
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setMessage("Register success");
@@ -82,16 +88,26 @@ public class AuthController {
         String username = req.getEmail();
         String password = req.getPassword();
 
+        // Authenticate the user
         Authentication authentication = authenticate(username, password);
 
+        // Extract the role from authorities
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.isEmpty() ? null : authorities.iterator().next().getAuthority();
+
+        System.out.println("Extracted role from authorities: " + role);
+
+        // Don't remove the "ROLE_" prefix from the role
+        System.out.println("Role being used: " + role);
+
+        // Generate JWT token
         String jwt = jwtProvider.generateToken(authentication);
 
+        // Create the response object
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setMessage("Login success");
-        authResponse.setRole(USER_ROLE.valueOf(role));
+        authResponse.setRole(USER_ROLE.valueOf(role));  // Match with USER_ROLE enum
 
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
@@ -100,11 +116,20 @@ public class AuthController {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
 
         if (userDetails == null) {
+            System.out.println("User not found.");
             throw new BadCredentialsException("Invalid username...");
         }
+
+        // Log the hashed password and entered password
+        System.out.println("Hashed password in DB: " + userDetails.getPassword());
+        System.out.println("Entered password: " + password);
+
+        // Check if the password matches the hashed password
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            System.out.println("Password does not match.");
             throw new BadCredentialsException("Invalid password...");
         }
+
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

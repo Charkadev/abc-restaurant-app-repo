@@ -1,0 +1,132 @@
+/* General Styling */
+.homepage-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0; /* Remove top padding to ensure carousel touches the navbar */
+  padding-bottom: 100px; /* Add bottom padding to ensure content doesn't get covered by the footer */
+}
+
+/* Carousel container with full width and responsive behavior */
+.carousel-container {
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+.carousel-slide {
+  position: relative;
+  width: 100%;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.carousel-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.carousel-text h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.carousel-text p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.carousel-link {
+  display: inline-block;
+  font-size: 18px;
+  color: #ffcc00;
+  text-decoration: none;
+  margin: 10px;
+  padding: 10px 20px;
+  border: 1px solid #ffcc00;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.carousel-link:hover {
+  background-color: #ffcc00;
+  color: black;
+}
+
+/* Styling for the bottom half with restaurant images */
+.restaurant-images-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 150px; /* Increased margin to ensure space between the images and footer */
+}
+
+.restaurant-card {
+  text-align: center;
+  margin: 0 20px;
+  flex: 1; /* Each card grows equally in width */
+}
+
+.restaurant-card img {
+  width: 100%; /* Image takes the full width of its container */
+  height: 250px; /* Fixed height for all images */
+  object-fit: cover; /* Cropping to make the image fill the container */
+  border-radius: 10px;
+}
+
+.restaurant-card h3 {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.view-details-link {
+  display: inline-block;
+  margin-top: 5px;
+  text-decoration: none;
+  color: #ff9900;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.view-details-link:hover {
+  color: #ffcc00;
+}
+
+/* Ensure the footer doesn't cover the images */
+body, html {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+footer {
+  position: relative;
+  z-index: 10;
+  margin-top: 50px; /* Ensure the footer stays below content */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .restaurant-images-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .restaurant-card img {
+    max-width: 100%; /* Make the images responsive on smaller screens */
+  }
+}

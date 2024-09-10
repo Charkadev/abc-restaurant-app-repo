@@ -1,0 +1,71 @@
+/* Styling for the reservation page */
+.reservation-page {
+   max-width: 600px;
+   margin: 0 auto;
+   padding: 20px;
+   text-align: center;
+ }
+ 
+ h1 {
+   font-size: 32px;
+   margin-bottom: 20px;
+ }
+ 
+ .login-prompt {
+   margin-top: 20px;
+ }
+ 
+ .login-button {
+   padding: 10px 20px;
+   background-color: #ffcc00;
+   color: #333;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 16px;
+ }
+ 
+ .login-button:hover {
+   background-color: #fff;
+ }
+ 
+ .reservation-form {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+ }
+ 
+ .form-group {
+   margin-bottom: 15px;
+   width: 100%;
+ }
+ 
+ .form-group label {
+   font-size: 16px;
+   display: block;
+   margin-bottom: 5px;
+   text-align: left;
+ }
+ 
+ .form-group input {
+   padding: 10px;
+   width: 100%;
+   font-size: 16px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+ }
+ 
+ .submit-button {
+   padding: 10px 20px;
+   background-color: #ffcc00;
+   color: #333;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 16px;
+ }
+ 
+ .submit-button:hover {
+   background-color: #fff;
+ }
+ 

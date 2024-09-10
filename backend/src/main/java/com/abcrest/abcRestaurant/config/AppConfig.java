@@ -31,7 +31,11 @@ public class AppConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Restaurant staff and Admins can access /api/staff/**
                         .requestMatchers("/api/staff/**").hasAnyRole("RESTAURANT_STAFF", "ADMIN")
-                        // All authenticated users can access /api/**
+                        // Allow staff and admin to access all reservations
+                        .requestMatchers("/api/reservations/all").hasAnyRole("RESTAURANT_STAFF", "ADMIN")
+                        // Allow authenticated users to create a reservation
+                        .requestMatchers("/api/reservations").authenticated()
+                        // All other authenticated requests for /api/**
                         .requestMatchers("/api/**").authenticated()
                         // All other requests are allowed without authentication
                         .anyRequest().permitAll()

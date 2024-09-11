@@ -17,11 +17,13 @@ const LoginPage = () => {
       localStorage.setItem('role', response.data.role);
 
       const userRole = response.data.role;
-      if (userRole === 'ADMIN') {
+      
+      // Redirect based on the role after successful login
+      if (userRole === 'ROLE_ADMIN') {
         navigate('/dashboard/admin');
-      } else if (userRole === 'RESTAURANT_STAFF') {
+      } else if (userRole === 'ROLE_RESTAURANT_STAFF') {
         navigate('/dashboard/staff');
-      } else {
+      } else if (userRole === 'ROLE_CUSTOMER') {
         navigate('/dashboard/customer');
       }
     } catch (err) {

@@ -45,6 +45,7 @@ public class AuthController {
     @Autowired
     private CartRepository cartRepository;
 
+    // Signup endpoint for new users
     @PostMapping("/signup")
     public ResponseEntity<?> createUserHandler(@RequestBody User user) {
         User isEmailExist = userRepository.findByEmail(user.getEmail());
@@ -83,6 +84,7 @@ public class AuthController {
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
+    // Signin endpoint for existing users
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest req) {
         String username = req.getEmail();
@@ -95,10 +97,8 @@ public class AuthController {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.isEmpty() ? null : authorities.iterator().next().getAuthority();
 
-        System.out.println("Extracted role from authorities: " + role);
-
-        // Don't remove the "ROLE_" prefix from the role
-        System.out.println("Role being used: " + role);
+        // Convert the role from String to USER_ROLE enum
+        USER_ROLE userRole = USER_ROLE.valueOf(role);  // Convert role string to enum
 
         // Generate JWT token
         String jwt = jwtProvider.generateToken(authentication);
@@ -107,7 +107,7 @@ public class AuthController {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setMessage("Login success");
-        authResponse.setRole(USER_ROLE.valueOf(role));  // Match with USER_ROLE enum
+        authResponse.setRole(userRole);  // Set the USER_ROLE enum
 
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
@@ -116,17 +116,11 @@ public class AuthController {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
 
         if (userDetails == null) {
-            System.out.println("User not found.");
             throw new BadCredentialsException("Invalid username...");
         }
 
-        // Log the hashed password and entered password
-        System.out.println("Hashed password in DB: " + userDetails.getPassword());
-        System.out.println("Entered password: " + password);
-
         // Check if the password matches the hashed password
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            System.out.println("Password does not match.");
             throw new BadCredentialsException("Invalid password...");
         }
 

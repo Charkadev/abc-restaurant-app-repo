@@ -15,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin/food")
+@RequestMapping("/api/admin/menu/items")
 public class AdminFoodController {
 
     @Autowired

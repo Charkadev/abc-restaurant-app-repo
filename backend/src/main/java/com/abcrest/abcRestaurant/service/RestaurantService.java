@@ -23,7 +23,7 @@ public interface RestaurantService {
 
     Restaurant findRestaurantByUserId(String userId) throws Exception;
 
-    RestaurantDto addToFavorites(String restaurantId, User user) throws Exception;
-
     Restaurant updateRestaurantStatus(String restaurantId) throws Exception;
+
+
 }

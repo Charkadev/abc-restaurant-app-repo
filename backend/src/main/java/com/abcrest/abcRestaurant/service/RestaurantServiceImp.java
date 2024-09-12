@@ -1,6 +1,5 @@
 package com.abcrest.abcRestaurant.service;
 
-import com.abcrest.abcRestaurant.dto.RestaurantDto;
 import com.abcrest.abcRestaurant.model.Restaurant;
 import com.abcrest.abcRestaurant.model.User;
 import com.abcrest.abcRestaurant.repository.RestaurantRepository;
@@ -32,7 +31,6 @@ public class RestaurantServiceImp implements RestaurantService {
         restaurant.setName(req.getName());
         restaurant.setOpeningHours(req.getOpeningHours());
         restaurant.setRegistrationDate(LocalDateTime.now());
-        restaurant.setOwner(user);
         return restaurantRepository.save(restaurant);
     }
 
@@ -81,44 +79,8 @@ public class RestaurantServiceImp implements RestaurantService {
 
     @Override
     public Restaurant findRestaurantByUserId(String userId) throws Exception {
-        Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
-        if (restaurant == null) {
-            throw new Exception("Restaurant not found for user ID: " + userId);
-        }
-        return restaurant;
-    }
-
-    @Override
-    public RestaurantDto addToFavorites(String restaurantId, User user) throws Exception {
-        // If user is passed as null (e.g., for public endpoints), handle appropriately
-        if (user == null) {
-            throw new Exception("User must be provided for this operation.");
-        }
-        Restaurant restaurant = findRestaurantById(restaurantId);
-
-        RestaurantDto dto = new RestaurantDto();
-        dto.setDescription(restaurant.getDescription());
-        dto.setImages(restaurant.getImages());
-        dto.setTitle(restaurant.getName());
-        dto.setId(restaurantId);
-
-        boolean isFavorited = false;
-        List<RestaurantDto> favorites = user.getFavorites();
-        for (RestaurantDto favorite : favorites) {
-            if (favorite.getId().equals(restaurantId)) {
-                isFavorited = true;
-                break;
-            }
-        }
-
-        if (isFavorited) {
-            favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
-        } else {
-            favorites.add(dto);
-        }
-
-        userRepository.save(user);
-        return dto;
+        // Removed logic related to owner
+        throw new Exception("findRestaurantByUserId is not supported.");
     }
 
     @Override
@@ -127,4 +89,6 @@ public class RestaurantServiceImp implements RestaurantService {
         restaurant.setOpen(!restaurant.isOpen());
         return restaurantRepository.save(restaurant);
     }
+
+    // Removed addToFavorites
 }

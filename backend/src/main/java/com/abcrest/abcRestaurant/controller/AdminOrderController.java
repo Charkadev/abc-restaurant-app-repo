@@ -23,21 +23,30 @@ public class AdminOrderController {
     private UserService userService;
 
     /**
-     * Get the order history for a specific restaurant by its ID
+     * Get the order history for a specific user or filter by order status
      * Only Admin or Restaurant Staff can access this
      */
     @PreAuthorize("hasAnyRole('ADMIN', 'RESTAURANT_STAFF')")  // Ensure only Admins or Staff can access
-    @GetMapping("/order/restaurant/{id}")
+    @GetMapping("/orders")
     public ResponseEntity<List<Order>> getOrderHistory(
-            @PathVariable String id,  // Changed to String for MongoDB ObjectId
             @RequestParam(required = false) String order_status,
             @RequestHeader("Authorization") String jwt) throws Exception {
 
         // Validate user role and find user by JWT token
         User user = userService.findUserByJwtToken(jwt);
 
-        // Retrieve the order history for the restaurant by restaurant ID
-        List<Order> orders = orderService.getRestaurantsOrder(id, order_status);
+        // Retrieve the order history, possibly filtering by order status
+        List<Order> orders;
+        if (order_status != null) {
+            // Fetch orders filtered by status
+            orders = orderService.getUsersOrder(user.getId());
+            // You can add filtering by status within the orders fetched if necessary
+            orders.removeIf(order -> !order.getOrderStatus().equalsIgnoreCase(order_status));
+        } else {
+            // Fetch all orders for the user
+            orders = orderService.getUsersOrder(user.getId());
+        }
+
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 

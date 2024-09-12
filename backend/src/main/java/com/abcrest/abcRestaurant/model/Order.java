@@ -1,6 +1,5 @@
 package com.abcrest.abcRestaurant.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,10 +21,6 @@ public class Order {
 
     @DBRef  // Reference to the User document
     private User customer;
-
-    @JsonIgnore
-    @DBRef  // Reference to the Restaurant document
-    private Restaurant restaurant;
 
     private Long totalAmount;
     private String orderStatus;

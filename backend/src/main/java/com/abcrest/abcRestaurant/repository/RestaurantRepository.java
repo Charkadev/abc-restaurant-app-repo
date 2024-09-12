@@ -9,11 +9,10 @@ import java.util.List;
 public interface RestaurantRepository extends MongoRepository<Restaurant, String> {  // Use MongoRepository with String for ObjectId
 
     // MongoDB query syntax using regex for search
-    @Query("{ '$or': [ { 'name': { '$regex': ?0, '$options': 'i' } }, { 'cuisineType': { '$regex': ?0, '$options': 'i' } } ] }")
+    @Query("{ '$or': [ { 'name': { '$regex': ?0, '$options': 'i' } }, { 'description': { '$regex': ?0, '$options': 'i' } } ] }")
     List<Restaurant> findBySearchQuery(String query);
 
-    // Find a restaurant by the owner's ID (String for MongoDB ObjectId)
-    Restaurant findByOwnerId(String ownerId);
+    // Removed findByOwnerId
 
     // Fetch all open restaurants
     List<Restaurant> findByOpenTrue();  // For public display of only open restaurants

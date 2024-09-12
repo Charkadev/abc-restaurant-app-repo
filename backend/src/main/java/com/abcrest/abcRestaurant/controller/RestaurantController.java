@@ -1,6 +1,5 @@
 package com.abcrest.abcRestaurant.controller;
 
-import com.abcrest.abcRestaurant.dto.RestaurantDto;
 import com.abcrest.abcRestaurant.model.Restaurant;
 import com.abcrest.abcRestaurant.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
 
-    // Fetch restaurant by ID (public)
+    // Fetch restaurant by ID (public access)
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> findRestaurantById(@PathVariable String id) throws Exception {
         Restaurant restaurant = restaurantService.findRestaurantById(id);
@@ -40,13 +39,5 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
 
-    // Add a restaurant to user's favorites (requires authorization)
-    @PutMapping("/{id}/add-favorites")
-    public ResponseEntity<RestaurantDto> addToFavorites(
-            @RequestHeader("Authorization") String jwt, @PathVariable String id) throws Exception {
-        // Assuming you retrieve the user by JWT token
-        // User user = userService.findUserByJwtToken(jwt);  // Uncomment if user retrieval is necessary
-        RestaurantDto restaurant = restaurantService.addToFavorites(id, null); // Replace `null` with `user` when userService is added
-        return new ResponseEntity<>(restaurant, HttpStatus.OK);
-    }
+    // Removed add to favorites functionality as requested
 }

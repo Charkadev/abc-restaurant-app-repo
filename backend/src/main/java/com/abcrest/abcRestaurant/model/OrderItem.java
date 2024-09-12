@@ -7,8 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Document(collection = "orderItems")  // MongoDB collection name
 @Data
 @NoArgsConstructor
@@ -25,5 +23,5 @@ public class OrderItem {
 
     private Long totalPrice;
 
-    private List<String> ingredients;  // Embedded list of ingredients (or strings)
+
 }

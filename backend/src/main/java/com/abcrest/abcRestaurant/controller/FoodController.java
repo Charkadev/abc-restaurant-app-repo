@@ -2,7 +2,6 @@ package com.abcrest.abcRestaurant.controller;
 
 import com.abcrest.abcRestaurant.model.Food;
 import com.abcrest.abcRestaurant.repository.FoodRepository;
-import com.abcrest.abcRestaurant.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +16,6 @@ public class FoodController {
 
     @Autowired
     private FoodRepository foodRepository;
-
-    @Autowired
-    private UserService userService;
 
     // Endpoint to fetch all food items (menu items)
     @GetMapping("/all")
@@ -46,7 +42,6 @@ public class FoodController {
             food.setDescription(updatedFood.getDescription());
             food.setPrice(updatedFood.getPrice());
             food.setAvailable(updatedFood.isAvailable());
-            food.setIngredients(updatedFood.getIngredients()); // Assuming ingredients are part of Food model
 
             Food savedFood = foodRepository.save(food);
             return new ResponseEntity<>(savedFood, HttpStatus.OK);

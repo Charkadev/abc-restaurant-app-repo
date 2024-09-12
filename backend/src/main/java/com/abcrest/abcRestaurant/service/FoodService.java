@@ -1,28 +1,19 @@
 package com.abcrest.abcRestaurant.service;
 
-import com.abcrest.abcRestaurant.model.Category;
 import com.abcrest.abcRestaurant.model.Food;
-import com.abcrest.abcRestaurant.model.Restaurant;
 import com.abcrest.abcRestaurant.request.CreateFoodRequest;
 
 import java.util.List;
 
 public interface FoodService {
 
-    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant);
+    Food createFood(CreateFoodRequest req);
 
-    void deleteFood(String foodId) throws Exception;  // String for MongoDB ObjectId
+    void deleteFood(String foodId) throws Exception;
 
-    public List<Food> getRestaurantsFoods(String restaurantId,  // String for MongoDB ObjectId
-                                          boolean isVegetarian,
-                                          boolean isNonVeg,
-                                          boolean isSeasonal,
-                                          String foodCategory
-    );
+    List<Food> searchFood(String keyword);
 
-    public List<Food> searchFood(String keyword);
+    Food findFoodById(String foodId) throws Exception;
 
-    public Food findFoodById(String foodId) throws Exception;  // String for MongoDB ObjectId
-
-    public Food updateAvailabilityStatus(String foodId) throws Exception;  // String for MongoDB ObjectId
+    Food updateAvailabilityStatus(String foodId) throws Exception;
 }

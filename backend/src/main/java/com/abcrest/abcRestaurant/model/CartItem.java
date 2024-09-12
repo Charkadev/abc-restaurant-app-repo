@@ -8,8 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Document(collection = "cartItems")  // MongoDB collection name
 @Data
 @NoArgsConstructor
@@ -28,7 +26,7 @@ public class CartItem {
 
     private int quantity;
 
-    private List<String> ingredients;
+    // Removed: private List<String> ingredients;
 
     private Long totalPrice;
 }

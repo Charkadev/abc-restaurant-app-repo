@@ -43,7 +43,6 @@ public class CartServiceImp implements CartService {
         newCartItem.setFood(food);
         newCartItem.setCart(cart);
         newCartItem.setQuantity(req.getQuantity());
-        newCartItem.setIngredients(req.getIngredients());
         newCartItem.setTotalPrice(req.getQuantity() * food.getPrice());
 
         CartItem savedCartItem = cartItemRepository.save(newCartItem);

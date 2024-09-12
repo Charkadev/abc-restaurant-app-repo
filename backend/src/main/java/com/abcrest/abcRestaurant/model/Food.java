@@ -19,7 +19,7 @@ public class Food {
     @Id
     private String id;  // MongoDB ObjectId
 
-    private String name;
+    private String item_name;  // Changed from 'name' to 'item_name'
     private String description;
     private Long price;
     private String category;  // String field for category

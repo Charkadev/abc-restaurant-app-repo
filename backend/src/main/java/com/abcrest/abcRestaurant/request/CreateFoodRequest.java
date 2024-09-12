@@ -6,9 +6,9 @@ import java.util.List;
 @Data
 public class CreateFoodRequest {
 
-    private String name;
+    private String item_name;  // Changed from 'name' to 'item_name'
     private String description;
     private Long price;
-    private String category;  // String field for category
-    private List<String> images;
+    private String category;  // String field for category (e.g., "Food", "Drinks", "Dessert")
+    private List<String> images;  // Optional
 }

@@ -20,9 +20,9 @@ public class FoodServiceImp implements FoodService {
         Food food = new Food();
         food.setDescription(req.getDescription());
         food.setImages(req.getImages());
-        food.setName(req.getName());
+        food.setItem_name(req.getItem_name());  // Changed from 'setName' to 'setItem_name'
         food.setPrice(req.getPrice());
-        food.setCategory(req.getCategory());  // Category now stored as a string
+        food.setCategory(req.getCategory());
 
         return foodRepository.save(food);
     }

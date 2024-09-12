@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';  // Axios instance for API calls
+import api from '../services/api';
 import './MenuPage.css';
 
 const MenuPage = () => {
@@ -9,7 +9,6 @@ const MenuPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  
   const token = localStorage.getItem('token'); // Check if the user is logged in
 
   // Fetch all foods or search for foods based on search term
@@ -18,7 +17,7 @@ const MenuPage = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await api.get(`/api/food/search?name=${search}`);
+        const response = await api.get(search ? `/api/food/search?name=${search}` : `/api/food/all`);
         setFoods(response.data);
       } catch (err) {
         console.error('Error fetching foods:', err);
@@ -26,32 +25,26 @@ const MenuPage = () => {
       }
       setLoading(false);
     };
-
     fetchFoods();
   }, [search]);
 
-  // Handle adding food to the cart
   const handleAddToCart = (foodId) => {
     if (!token) {
-      // If the user is not logged in, navigate to the login page
       navigate('/login');
       return;
     }
 
-    // If the user is logged in, add the food item to the cart
     api.put(`/api/cart/add`, { foodId })
       .then(() => alert('Food item added to cart'))
       .catch((err) => {
         console.error('Error adding to cart:', err);
-        alert('Failed to add item to cart. Please try again.');
+        alert('Failed to add item to cart.');
       });
   };
 
   return (
     <div className="menu-page">
       <h1>Menu</h1>
-
-      {/* Search bar for searching food items */}
       <input
         type="text"
         placeholder="Search for food..."
@@ -59,20 +52,15 @@ const MenuPage = () => {
         onChange={(e) => setSearch(e.target.value)}
         className="search-bar"
       />
-
-      {/* Display loading indicator or error message */}
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
+      {loading ? <p>Loading...</p> : error ? <p>{error}</p> : (
         <div className="food-grid">
           {foods.length > 0 ? (
             foods.map((food) => (
               <div key={food.id} className="food-item">
-                <img src={food.imageUrl} alt={food.name} />
-                <h3>{food.name}</h3>
-                <p>{food.description}</p>
+                <img src={food.image_url} alt={food.item_name} />
+                <h3>{food.item_name}</h3>
+                <p>{food.item_description}</p>
+                <p><strong>Category:</strong> {food.category}</p>
                 <p>${food.price.toFixed(2)}</p>
                 <button onClick={() => handleAddToCart(food.id)}>Add to Cart</button>
               </div>

@@ -38,7 +38,7 @@ public class FoodController {
 
         if (foodOptional.isPresent()) {
             Food food = foodOptional.get();
-            food.setName(updatedFood.getName());
+            food.setItem_name(updatedFood.getItem_name());  // Changed from 'setName' to 'setItem_name'
             food.setDescription(updatedFood.getDescription());
             food.setPrice(updatedFood.getPrice());
             food.setAvailable(updatedFood.isAvailable());

@@ -11,33 +11,42 @@ import MenuPage from './pages/MenuPage';
 import CartPage from './pages/CartPage';
 import ManageUsers from './dashboard/ManageUsers';
 import ManageMenu from './dashboard/ManageMenu';
-import ManageRestaurants from './dashboard/ManageRestaurants'; // Import ManageRestaurants
+import ManageRestaurants from './dashboard/ManageRestaurants'; 
+import GalleryPage from './pages/GalleryPage';  // Added GalleryPage import
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
+import './App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/reservation" element={<ReservationPage />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/cart" element={<PrivateRoute role="ROLE_CUSTOMER"><CartPage /></PrivateRoute>} />
 
-          {/* Admin routes */}
-          <Route path="/dashboard/admin" element={<PrivateRoute role="ROLE_ADMIN"><AdminDashboard /></PrivateRoute>} />
-          <Route path="/dashboard/admin/users" element={<PrivateRoute role="ROLE_ADMIN"><ManageUsers /></PrivateRoute>} />
-          <Route path="/dashboard/admin/menu" element={<PrivateRoute role="ROLE_ADMIN"><ManageMenu /></PrivateRoute>} />
-          <Route path="/dashboard/admin/restaurants" element={<PrivateRoute role="ROLE_ADMIN"><ManageRestaurants /></PrivateRoute>} /> {/* Add ManageRestaurants route */}
+        <div className="App-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/reservation" element={<ReservationPage />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/cart" element={<PrivateRoute role="ROLE_CUSTOMER"><CartPage /></PrivateRoute>} />
+            <Route path="/gallery" element={<GalleryPage />} />  {/* Added Gallery route */}
 
-          {/* Protected routes based on roles */}
-          <Route path="/dashboard/staff" element={<PrivateRoute role="ROLE_RESTAURANT_STAFF"><StaffDashboard /></PrivateRoute>} />
-          <Route path="/dashboard/customer" element={<PrivateRoute role="ROLE_CUSTOMER"><CustomerDashboard /></PrivateRoute>} />
-        </Routes>
+            {/* Admin routes */}
+            <Route path="/dashboard/admin" element={<PrivateRoute role="ROLE_ADMIN"><AdminDashboard /></PrivateRoute>} />
+            <Route path="/dashboard/admin/users" element={<PrivateRoute role="ROLE_ADMIN"><ManageUsers /></PrivateRoute>} />
+            <Route path="/dashboard/admin/menu" element={<PrivateRoute role="ROLE_ADMIN"><ManageMenu /></PrivateRoute>} />
+            <Route path="/dashboard/admin/restaurants" element={<PrivateRoute role="ROLE_ADMIN"><ManageRestaurants /></PrivateRoute>} />
+
+            {/* Protected routes based on roles */}
+            <Route path="/dashboard/staff" element={<PrivateRoute role="ROLE_RESTAURANT_STAFF"><StaffDashboard /></PrivateRoute>} />
+            <Route path="/dashboard/customer" element={<PrivateRoute role="ROLE_CUSTOMER"><CustomerDashboard /></PrivateRoute>} />
+          </Routes>
+        </div>
+
+        <Footer />
       </div>
     </Router>
   );

@@ -44,6 +44,11 @@ const HomePage = () => {
           <Link to="/restaurants/kandy" className="view-details-link">View Details</Link>
         </div>
         <div className="restaurant-card">
+          <img src="/assets/NuwaraEliya.jpg" alt="ABC Restaurant Kandy" />
+          <h3>ABC Restaurant Nuwara Eliya</h3>
+          <Link to="/restaurants/NuwaraEliya" className="view-details-link">View Details</Link>
+        </div>
+        <div className="restaurant-card">
           <img src="/assets/galle.jpg" alt="ABC Restaurant Galle" />
           <h3>ABC Restaurant Galle</h3>
           <Link to="/restaurants/galle" className="view-details-link">View Details</Link>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import api from '../services/api';  // Axios instance for API calls
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
 
 const ManageMenu = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -8,7 +8,7 @@ const ManageMenu = () => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await api.get('/api/admin/menu/items');
+        const response = await api.get('/api/food/all');
         setMenuItems(response.data);
       } catch (error) {
         console.error('Error fetching menu items:', error);
@@ -20,10 +20,10 @@ const ManageMenu = () => {
 
   const handleCreateMenuItem = async () => {
     try {
-      await api.post('/api/admin/menu/items', newItem);
+      await api.post('/api/food/create', newItem);
       setNewItem({ name: '', description: '', price: 0, available: true });
       // Fetch the updated list of menu items
-      const response = await api.get('/api/admin/menu/items');
+      const response = await api.get('/api/food/all');
       setMenuItems(response.data);
     } catch (error) {
       console.error('Error creating menu item:', error);
@@ -32,9 +32,9 @@ const ManageMenu = () => {
 
   const handleDeleteMenuItem = async (id) => {
     try {
-      await api.delete(`/api/admin/menu/items/${id}`);
+      await api.delete(`/api/food/delete/${id}`);
       // Fetch the updated list of menu items
-      const response = await api.get('/api/admin/menu/items');
+      const response = await api.get('/api/food/all');
       setMenuItems(response.data);
     } catch (error) {
       console.error('Error deleting menu item:', error);

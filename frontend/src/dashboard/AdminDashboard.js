@@ -8,11 +8,9 @@ const AdminDashboard = () => {
       <ul>
         <li><Link to="/dashboard/admin/users">Manage Users</Link></li>
         <li><Link to="/dashboard/admin/menu">Manage Menu Items</Link></li>
-        {/* You can add more links here like "Generate Reports" later */}
       </ul>
     </div>
   );
 };
 
 export default AdminDashboard;
-

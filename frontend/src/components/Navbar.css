@@ -2,15 +2,17 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background-color: #333;  /* Dark background */
-  padding: 10px 20px;
+  align-items: center; /* Ensure items are vertically centered */
+  background-color: #1a1a1a;  /* Dark background */
+  padding: 15px 30px;  /* Adjusted padding for a better look */
+  height: 70px;  /* Increased height to provide enough space */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 
 .navbar-left .navbar-brand {
-  font-size: 24px;
+  font-size: 28px;  /* Increase brand font size */
   font-weight: bold;
-  color: white;
+  color: rgb(255, 255, 255);
   margin-right: 30px;  /* Space between brand and links */
   text-decoration: none;  /* Remove underline */
 }
@@ -19,7 +21,8 @@
   color: white;
   margin-right: 20px;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 18px;  /* Slightly larger font size */
+  vertical-align: middle;  /* Ensure links align in the middle */
 }
 
 .navbar-link:hover {
@@ -29,15 +32,17 @@
 .navbar-right {
   display: flex;
   align-items: center;
+  gap: 15px;  /* Space between elements on the right side */
 }
 
 .navbar-button {
   background-color: #ff4d4d;
   border: none;
   color: white;
-  padding: 8px 16px;
+  padding: 10px 18px;  /* Adjust padding for larger button */
   cursor: pointer;
   border-radius: 5px;
+  font-size: 16px;  /* Larger font size */
 }
 
 .navbar-button:hover {
@@ -52,7 +57,8 @@
 }
 
 .navbar-cart i {
-  font-size: 24px;  /* Adjust cart icon size */
+  font-size: 28px;  /* Larger cart icon */
+  vertical-align: middle;
 }
 
 .navbar-cart:hover {

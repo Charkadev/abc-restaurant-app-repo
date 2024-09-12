@@ -26,32 +26,31 @@ public class RestaurantServiceImp implements RestaurantService {
     public Restaurant createRestaurant(CreateRestaurantRequest req, User user) {
         Restaurant restaurant = new Restaurant();
         restaurant.setAddress(req.getAddress());
-        restaurant.setContactInformation(req.getContactInformation());
-        restaurant.setCuisineType(req.getCuisineType());
+        restaurant.setContact(req.getContact());
         restaurant.setDescription(req.getDescription());
         restaurant.setImages(req.getImages());
         restaurant.setName(req.getName());
         restaurant.setOpeningHours(req.getOpeningHours());
         restaurant.setRegistrationDate(LocalDateTime.now());
         restaurant.setOwner(user);
-
         return restaurantRepository.save(restaurant);
     }
 
     @Override
     public Restaurant updateRestaurant(String restaurantId, CreateRestaurantRequest updatedRestaurant) throws Exception {
         Restaurant restaurant = findRestaurantById(restaurantId);
-
-        if (updatedRestaurant.getCuisineType() != null) {
-            restaurant.setCuisineType(updatedRestaurant.getCuisineType());
-        }
         if (updatedRestaurant.getDescription() != null) {
             restaurant.setDescription(updatedRestaurant.getDescription());
         }
         if (updatedRestaurant.getName() != null) {
             restaurant.setName(updatedRestaurant.getName());
         }
-
+        if (updatedRestaurant.getAddress() != null) {
+            restaurant.setAddress(updatedRestaurant.getAddress());
+        }
+        if (updatedRestaurant.getContact() != null) {
+            restaurant.setContact(updatedRestaurant.getContact());
+        }
         return restaurantRepository.save(restaurant);
     }
 
@@ -80,10 +79,9 @@ public class RestaurantServiceImp implements RestaurantService {
         return opt.get();
     }
 
-    // Updated method to fetch restaurant by userId (String for MongoDB ObjectId)
     @Override
     public Restaurant findRestaurantByUserId(String userId) throws Exception {
-        Restaurant restaurant = restaurantRepository.findByOwnerId(userId);  // MongoDB ObjectId (String)
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
         if (restaurant == null) {
             throw new Exception("Restaurant not found for user ID: " + userId);
         }
@@ -92,13 +90,17 @@ public class RestaurantServiceImp implements RestaurantService {
 
     @Override
     public RestaurantDto addToFavorites(String restaurantId, User user) throws Exception {
-        Restaurant restaurant = findRestaurantById(restaurantId);  // MongoDB ObjectId is already a String
+        // If user is passed as null (e.g., for public endpoints), handle appropriately
+        if (user == null) {
+            throw new Exception("User must be provided for this operation.");
+        }
+        Restaurant restaurant = findRestaurantById(restaurantId);
 
         RestaurantDto dto = new RestaurantDto();
         dto.setDescription(restaurant.getDescription());
         dto.setImages(restaurant.getImages());
         dto.setTitle(restaurant.getName());
-        dto.setId(restaurantId);  // MongoDB ObjectId (String)
+        dto.setId(restaurantId);
 
         boolean isFavorited = false;
         List<RestaurantDto> favorites = user.getFavorites();

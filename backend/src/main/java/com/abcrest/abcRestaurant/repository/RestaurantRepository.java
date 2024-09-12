@@ -14,4 +14,7 @@ public interface RestaurantRepository extends MongoRepository<Restaurant, String
 
     // Find a restaurant by the owner's ID (String for MongoDB ObjectId)
     Restaurant findByOwnerId(String ownerId);
+
+    // Fetch all open restaurants
+    List<Restaurant> findByOpenTrue();  // For public display of only open restaurants
 }

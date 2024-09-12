@@ -27,6 +27,8 @@ public class AppConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Permit access to register and login endpoints without authentication
                         .requestMatchers("/auth/signup", "/auth/login").permitAll()
+                        // Allow public access to restaurants page
+                        .requestMatchers("/api/restaurants/**").permitAll()  // <-- Public access to restaurant APIs
                         // Permit access to food search and menu items without authentication
                         .requestMatchers("/api/food/**").permitAll()
                         // Only users with Admin role can access /api/admin/**

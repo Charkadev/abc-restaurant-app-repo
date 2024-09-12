@@ -6,10 +6,13 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface FoodRepository extends MongoRepository<Food, String> {  // MongoRepository with String for ObjectId
+public interface FoodRepository extends MongoRepository<Food, String> {
 
-    List<Food> findByRestaurantId(String restaurantId);  // String for MongoDB ObjectId
+    // Find foods by restaurant ID
+    @Query("{ 'restaurant.id': ?0 }")
+    List<Food> findByRestaurantId(String restaurantId);
 
-    @Query("{ 'name': { $regex: ?0, $options: 'i' } }")
+    // Search for food items based on name or description
+    @Query("{ $or: [ { 'name': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] }")
     List<Food> searchFood(String keyword);
 }

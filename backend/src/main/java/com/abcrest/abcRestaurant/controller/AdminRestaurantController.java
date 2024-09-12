@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/staff/restaurants")  // Shared route for both Admins and Staff
 public class AdminRestaurantController {
@@ -21,6 +23,16 @@ public class AdminRestaurantController {
 
     @Autowired
     private UserService userService;
+
+    // GET method to fetch all restaurants (accessible by Admin and Staff)
+    @PreAuthorize("hasAnyRole('ADMIN', 'RESTAURANT_STAFF')")
+    @GetMapping()
+    public ResponseEntity<List<Restaurant>> getAllRestaurants(
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        List<Restaurant> restaurants = restaurantService.getAllRestaurant();
+        return new ResponseEntity<>(restaurants, HttpStatus.OK);
+    }
 
     // Only Admins can create a new restaurant
     @PreAuthorize("hasRole('ADMIN')")
@@ -40,7 +52,7 @@ public class AdminRestaurantController {
     public ResponseEntity<Restaurant> updateRestaurant(
             @RequestBody CreateRestaurantRequest req,
             @RequestHeader("Authorization") String jwt,
-            @PathVariable String id  // MongoDB uses String for ObjectId
+            @PathVariable String id
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.updateRestaurant(id, req);

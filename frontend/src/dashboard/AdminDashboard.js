@@ -8,6 +8,7 @@ const AdminDashboard = () => {
       <ul>
         <li><Link to="/dashboard/admin/users">Manage Users</Link></li>
         <li><Link to="/dashboard/admin/menu">Manage Menu Items</Link></li>
+        <li><Link to="/dashboard/admin/restaurants">Manage Restaurants</Link></li>  {/* Link to manage restaurants */}
       </ul>
     </div>
   );

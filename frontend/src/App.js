@@ -11,7 +11,8 @@ import MenuPage from './pages/MenuPage';
 import CartPage from './pages/CartPage';
 import ManageUsers from './dashboard/ManageUsers';
 import ManageMenu from './dashboard/ManageMenu';
-import ManageRestaurants from './dashboard/ManageRestaurants'; 
+import ManageRestaurants from './dashboard/ManageRestaurants';  // Import ManageRestaurants
+import RestaurantsPage from './pages/RestaurantsPage';  // Import RestaurantsPage
 import GalleryPage from './pages/GalleryPage';  // Added GalleryPage import
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -32,7 +33,8 @@ function App() {
             <Route path="/reservation" element={<ReservationPage />} />
             <Route path="/menu" element={<MenuPage />} />
             <Route path="/cart" element={<PrivateRoute role="ROLE_CUSTOMER"><CartPage /></PrivateRoute>} />
-            <Route path="/gallery" element={<GalleryPage />} />  {/* Added Gallery route */}
+            <Route path="/restaurants" element={<RestaurantsPage />} />  {/* Restaurants route */}
+            <Route path="/gallery" element={<GalleryPage />} />  {/* Gallery route */}
 
             {/* Admin routes */}
             <Route path="/dashboard/admin" element={<PrivateRoute role="ROLE_ADMIN"><AdminDashboard /></PrivateRoute>} />

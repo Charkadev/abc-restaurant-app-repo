@@ -19,7 +19,7 @@ import java.util.List;
 public class Restaurant {
 
     @Id  // MongoDB generates a unique ObjectId automatically
-    private String id;  // Changed to String for MongoDB ObjectId
+    private String id;
 
     @DBRef  // Reference to the User document (owner)
     private User owner;
@@ -27,11 +27,8 @@ public class Restaurant {
     private String name;
     private String description;
     private String cuisineType;
-
-    @DBRef  // Reference to the Address document
-    private Address address;
-
-    private ContactInformation contactInformation;  // Embedded contact information (no need for @Embedded in MongoDB)
+    private String address;  // Use String to store the address
+    private String contact;  // Use String to store contact information
 
     private String openingHours;
 

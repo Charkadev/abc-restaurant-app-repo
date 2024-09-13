@@ -28,15 +28,12 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public Order createOrder(OrderRequest orderRequest, User user) {
-        // Use the address directly from the order request
-        String deliveryAddress = orderRequest.getDeliveryAddress();  // Now using a simple string
-
         // Create a new Order object
         Order createdOrder = new Order();
         createdOrder.setUserId(user.getId());  // Setting userId instead of a User object
         createdOrder.setCreatedAt(new Date());
         createdOrder.setOrderStatus("Pending");
-        createdOrder.setDeliveryAddress(deliveryAddress);  // Set the delivery address as a string
+        createdOrder.setDeliveryAddress(orderRequest.getDeliveryAddress());  // Set the delivery address as a string
 
         // Fetch the user's cart
         Cart cart;
@@ -80,6 +77,39 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    public Order createTemporaryOrder(User user, OrderRequest orderRequest) throws Exception {
+        // Fetch the user's cart
+        Cart cart = cartService.findCartByCustomerId(user.getId());
+        if (cart == null || cart.getItems().isEmpty()) {
+            throw new RuntimeException("Cart is empty or not found for user ID: " + user.getId());
+        }
+
+        // Convert CartItems to OrderItems
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItem cartItem : cart.getItems()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setFood(cartItem.getFood());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setTotalPrice(cartItem.getTotalPrice());
+
+            // Save each OrderItem
+            orderItems.add(orderItemRepository.save(orderItem));
+        }
+
+        // Create a new temporary order
+        Order order = new Order();
+        order.setUserId(user.getId());
+        order.setOrderStatus("Pending Payment");
+        order.setCreatedAt(new Date());
+        order.setDeliveryAddress(orderRequest.getDeliveryAddress());
+        order.setItems(orderItems);
+        order.setTotalPrice(cart.getTotal());
+
+        // Save and return the temporary order
+        return orderRepository.save(order);
+    }
+
+    @Override
     public Order updateOrder(String orderId, String orderStatus) throws Exception {
         // Find the order by String orderId
         Order order = findOrderById(orderId);
@@ -106,8 +136,6 @@ public class OrderServiceImp implements OrderService {
     public List<Order> getUsersOrder(String userId) throws Exception {
         // Get orders by userId
         return orderRepository.findByUserId(userId);
-
-
     }
 
     @Override

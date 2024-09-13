@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -36,5 +37,17 @@ public class OrderController {
         User user = userService.findUserByJwtToken(jwt);
         List<Order> orders = orderService.getUsersOrder(user.getId());
         return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    // New endpoint for preparing the order before payment
+    @PostMapping("/order/prepare")
+    public ResponseEntity<?> prepareOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String token) {
+        try {
+            User user = userService.findUserByJwtToken(token);
+            Order order = orderService.createTemporaryOrder(user, orderRequest);
+            return ResponseEntity.ok(Collections.singletonMap("orderId", order.getId()));
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to prepare order: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

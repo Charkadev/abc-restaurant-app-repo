@@ -17,4 +17,7 @@ public interface OrderService {
     List<Order> getUsersOrder(String userId) throws Exception;
 
     Order findOrderById(String orderId) throws Exception;
+
+    // New method for creating temporary orders before payment
+    Order createTemporaryOrder(User user, OrderRequest orderRequest) throws Exception;
 }

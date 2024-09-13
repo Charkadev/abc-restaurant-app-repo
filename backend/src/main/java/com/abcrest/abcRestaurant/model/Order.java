@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -17,20 +16,17 @@ import java.util.List;
 public class Order {
 
     @Id  // MongoDB automatically generates an ObjectId
-    private String id;  // Changed to String to store MongoDB ObjectId
+    private String id;  // String to store MongoDB ObjectId
 
-    @DBRef  // Reference to the User document
-    private User customer;
+    private String userId;  // Reference to the User's ID
 
     private Long totalAmount;
     private String orderStatus;
     private Date createdAt;
 
-    @DBRef  // Reference to the Address document
-    private Address deliveryAddress;
+    private String deliveryAddress;  // Can be a simple string for now
 
-    @DBRef  // References to OrderItem documents
-    private List<OrderItem> items;
+    private List<OrderItem> items;  // Changed from CartItem to OrderItem
 
     private int totalItem;
     private Long totalPrice;

@@ -22,7 +22,6 @@ public class OrderController {
     @Autowired
     private UserService userService;
 
-    // Create a new order
     @PostMapping("/order")
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest req,
                                              @RequestHeader("Authorization") String jwt) throws Exception {
@@ -31,7 +30,6 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    // Get the order history for the user
     @GetMapping("/order/user")
     public ResponseEntity<List<Order>> getOrderHistory(
             @RequestHeader("Authorization") String jwt) throws Exception {

@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface OrderRepository extends MongoRepository<Order, String> {
 
-    // Find orders by the customer's MongoDB ObjectId (String)
-    List<Order> findByCustomerId(String userId);
-
-    // Removed: List<Order> findByRestaurantId(String restaurantId);
+    // Find orders by the user's MongoDB ObjectId (String)
+    List<Order> findByUserId(String userId);  // Matching the 'userId' field in the Order model
 }

@@ -8,15 +8,13 @@ import java.util.List;
 
 public interface OrderService {
 
-    public Order createOrder(OrderRequest order, User user);
+    Order createOrder(OrderRequest order, User user);
 
-    public Order updateOrder(String orderId, String orderStatus) throws Exception;
+    Order updateOrder(String orderId, String orderStatus) throws Exception;
 
-    public void cancelOrder(String orderId) throws Exception;
+    void cancelOrder(String orderId) throws Exception;
 
-    public List<Order> getUsersOrder(String userId) throws Exception;
+    List<Order> getUsersOrder(String userId) throws Exception;
 
-
-
-    public Order findOrderById(String orderId) throws Exception;
+    Order findOrderById(String orderId) throws Exception;
 }

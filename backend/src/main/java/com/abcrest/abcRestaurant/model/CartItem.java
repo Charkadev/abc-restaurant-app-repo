@@ -24,9 +24,7 @@ public class CartItem {
     @DBRef  // Reference to the Food document
     private Food food;
 
-    private int quantity;
+    private int quantity;  // Number of units of the food item
 
-    // Removed: private List<String> ingredients;
-
-    private Long totalPrice;
+    private Long totalPrice;  // Total price for the cart item (quantity * price of food)
 }

@@ -1,6 +1,9 @@
 package com.abcrest.abcRestaurant.controller;
 
+import com.abcrest.abcRestaurant.model.Cart;
 import com.abcrest.abcRestaurant.model.User;
+import com.abcrest.abcRestaurant.model.USER_ROLE;
+import com.abcrest.abcRestaurant.repository.CartRepository;
 import com.abcrest.abcRestaurant.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +23,23 @@ public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CartRepository cartRepository;
+
     // Create a new user with any role
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         // Hash the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
+
+        // If the created user is a customer, create a cart for them
+        if (user.getRole() == USER_ROLE.ROLE_CUSTOMER) {
+            Cart cart = new Cart();
+            cart.setUserId(savedUser.getId());
+            cartRepository.save(cart);
+        }
+
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
@@ -42,8 +56,16 @@ public class AdminController {
                 existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
             }
 
-            userRepository.save(existingUser);
-            return new ResponseEntity<>(existingUser, HttpStatus.OK);
+            User updatedUser = userRepository.save(existingUser);
+
+            // If the user role is changed to customer and they don't have a cart, create one
+            if (existingUser.getRole() == USER_ROLE.ROLE_CUSTOMER && !cartRepository.findByUserId(updatedUser.getId()).isPresent()) {
+                Cart cart = new Cart();
+                cart.setUserId(updatedUser.getId());
+                cartRepository.save(cart);
+            }
+
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

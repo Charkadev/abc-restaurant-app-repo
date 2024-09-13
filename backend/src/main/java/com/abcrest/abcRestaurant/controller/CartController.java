@@ -33,17 +33,44 @@ public class CartController {
     public ResponseEntity<CartItem> updateCartItemQuantity(
             @RequestBody UpdateCartItemRequest req,
             @RequestHeader("Authorization") String jwt) throws Exception {
-        CartItem cartItem = cartService.updateCartItemQuantitiy(req.getCartItemId(), req.getQuantity());
+        CartItem cartItem = cartService.updateCartItemQuantity(req.getCartItemId(), req.getQuantity());
         return new ResponseEntity<>(cartItem, HttpStatus.OK);
     }
 
+//    @DeleteMapping("/cart-item/{id}/remove")
+//    public ResponseEntity<?> removeCartItem(@PathVariable String id, @RequestHeader("Authorization") String jwt) {
+//        try {
+//            Cart cart = cartService.removeItemFromCart(id, jwt);
+//            return new ResponseEntity<>(cart, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return the error message in the response
+//        }
+//    }
+
+//    @DeleteMapping("/cart-item/{id}/remove")
+//    public ResponseEntity<?> removeCartItem(@PathVariable String id, @RequestHeader("Authorization") String jwt) {
+//        try {
+//            Cart cart = cartService.removeItemFromCart(id, jwt);
+//            return new ResponseEntity<>(cart, HttpStatus.OK);
+//        } catch (Exception e) {
+//            // Return the error message to the frontend
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
     @DeleteMapping("/cart-item/{id}/remove")
-    public ResponseEntity<Cart> removeCartItem(
-            @PathVariable String id,  // Changed from Long to String
-            @RequestHeader("Authorization") String jwt) throws Exception {
-        Cart cart = cartService.removeItemFromCart(id, jwt);  // Pass String id
-        return new ResponseEntity<>(cart, HttpStatus.OK);
+    public ResponseEntity<?> removeCartItem(@PathVariable String id, @RequestHeader("Authorization") String jwt) {
+        try {
+            Cart cart = cartService.removeItemFromCart(id, jwt);
+            return new ResponseEntity<>(cart, HttpStatus.OK);
+        } catch (Exception e) {
+            // Return the error message to the frontend
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
+
+
+
 
     @PutMapping("/cart/clear")
     public ResponseEntity<Cart> clearCart(@RequestHeader("Authorization") String jwt) throws Exception {
@@ -55,7 +82,7 @@ public class CartController {
     @GetMapping("/cart")
     public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        Cart cart = cartService.findCartByUserId(user.getId());
+        Cart cart = cartService.findCartByCustomerId(user.getId());
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 }

@@ -1,41 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchOrderHistory = async () => {
+    const fetchOrders = async () => {
+      setError('');
+      setLoading(true);
       try {
-        const response = await api.get('/api/orders'); // Replace with your backend endpoint
+        const response = await api.get('/api/order/user', { // Changed to correct API endpoint
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setOrders(response.data);
       } catch (err) {
-        setError('Failed to load order history.');
+        setError('Failed to load orders');
+        console.error('Error fetching orders:', err.response?.data || err.message);
       }
+      setLoading(false);
     };
 
-    fetchOrderHistory();
-  }, []);
+    fetchOrders();
+  }, [token]);
 
-  if (error) return <p>{error}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (orders.length === 0) return <p>No orders found</p>;
 
   return (
     <div>
-      <h2>Order History</h2>
-      {orders.length === 0 ? (
-        <p>No orders found.</p>
-      ) : (
-        <ul>
-          {orders.map((order) => (
-            <li key={order.id}>
-              <h3>Order ID: {order.id}</h3>
-              <p>Total: ${order.total}</p>
-              <p>Status: {order.status}</p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <h1>Your Order History</h1>
+      <ul>
+        {orders.map(order => (
+          <li key={order.id}>
+            <h2>Order ID: {order.id}</h2>
+            <p>Status: {order.orderStatus}</p>
+            <p>Delivery Address: {order.deliveryAddress}</p>
+            <p>Total Price: ${order.totalPrice}</p>
+            <p>Ordered on: {new Date(order.createdAt).toLocaleString()}</p>
+            <ul>
+              {order.items.map(item => (
+                <li key={item.id}>
+                  {item.food.item_name} - {item.quantity} x ${item.food.price} = ${item.totalPrice}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

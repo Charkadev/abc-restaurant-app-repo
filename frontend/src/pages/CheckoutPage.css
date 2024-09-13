@@ -1,0 +1,105 @@
+/* General page layout */
+.checkout-container {
+   max-width: 800px;
+   margin: 0 auto;
+   padding: 20px;
+   background-color: #f9f9f9;
+   border-radius: 8px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ }
+ 
+ .checkout-container h1 {
+   text-align: center;
+   font-size: 2rem;
+   margin-bottom: 20px;
+   color: #333;
+ }
+ 
+ /* Cart items list */
+ .cart-items {
+   list-style: none;
+   padding: 0;
+   margin-bottom: 20px;
+ }
+ 
+ .cart-items li {
+   display: flex;
+   justify-content: space-between;
+   padding: 10px 0;
+   border-bottom: 1px solid #ddd;
+   font-size: 1.1rem;
+ }
+ 
+ .cart-items li:last-child {
+   border-bottom: none;
+ }
+ 
+ .cart-item-name {
+   font-weight: bold;
+ }
+ 
+ /* Total price */
+ .total-price {
+   font-size: 1.5rem;
+   font-weight: bold;
+   text-align: right;
+   margin-bottom: 20px;
+ }
+ 
+ /* Delivery address */
+ .delivery-address {
+   margin-bottom: 20px;
+ }
+ 
+ .delivery-address label {
+   display: block;
+   font-weight: bold;
+   margin-bottom: 5px;
+ }
+ 
+ .delivery-address input {
+   width: 100%;
+   padding: 10px;
+   border: 1px solid #ddd;
+   border-radius: 4px;
+   font-size: 1rem;
+ }
+ 
+ /* Place order button */
+ .place-order-btn {
+   display: block;
+   width: 100%;
+   padding: 15px;
+   background-color: #28a745;
+   color: #fff;
+   font-size: 1.2rem;
+   text-align: center;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+ }
+ 
+ .place-order-btn:hover {
+   background-color: #218838;
+ }
+ 
+ /* Success and error messages */
+ .message {
+   text-align: center;
+   font-size: 1rem;
+   padding: 10px;
+   margin-bottom: 20px;
+   border-radius: 4px;
+ }
+ 
+ .message.error {
+   background-color: #f8d7da;
+   color: #721c24;
+ }
+ 
+ .message.success {
+   background-color: #d4edda;
+   color: #155724;
+ }
+ 

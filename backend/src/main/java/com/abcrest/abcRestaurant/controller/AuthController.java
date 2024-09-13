@@ -65,7 +65,7 @@ public class AuthController {
 
         // Create a cart for the user
         Cart cart = new Cart();
-        cart.setCustomer(savedUser);
+        cart.setUserId(savedUser.getId());  // Set the userId instead of customer
         cartRepository.save(cart);
 
         // Authenticate the newly created user

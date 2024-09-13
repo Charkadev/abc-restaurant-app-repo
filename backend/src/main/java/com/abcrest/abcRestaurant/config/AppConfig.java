@@ -27,10 +27,8 @@ public class AppConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Permit access to register and login endpoints without authentication
                         .requestMatchers("/auth/signup", "/auth/login").permitAll()
-                        // Allow public access to restaurants page
-                        .requestMatchers("/api/restaurants/**").permitAll()  // <-- Public access to restaurant APIs
-                        // Permit access to food search and menu items without authentication
-                        .requestMatchers("/api/food/**").permitAll()
+                        // Allow public access to restaurants page and food APIs without authentication
+                        .requestMatchers("/api/restaurants/**", "/api/food/**").permitAll()
                         // Only users with Admin role can access /api/admin/**
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Restaurant staff and Admins can access /api/staff/**
@@ -46,29 +44,27 @@ public class AppConfig {
                 )
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())  // Disable CSRF for API calls
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));  // Enable CORS
 
         return http.build();
     }
 
-    private CorsConfigurationSource corsConfigurationSource() {
-        return new CorsConfigurationSource() {
-            @Override
-            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration cfg = new CorsConfiguration();
-                cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000"));  // Allow correct origin (non-SSL)
-                cfg.setAllowedMethods(Collections.singletonList("*"));  // Allow all methods (GET, POST, etc.)
-                cfg.setAllowCredentials(true);
-                cfg.setAllowedHeaders(Collections.singletonList("*"));  // Allow all headers
-                cfg.setExposedHeaders(Arrays.asList("Authorization"));  // Expose Authorization header
-                cfg.setMaxAge(3600L);  // Cache CORS configuration for 1 hour
-                return cfg;
-            }
+    // CORS Configuration to allow frontend access
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration cfg = new CorsConfiguration();
+            cfg.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));  // Frontend origin
+            cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));  // Allow common methods
+            cfg.setAllowCredentials(true);  // Allow credentials (JWT tokens, etc.)
+            cfg.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));  // Allow necessary headers
+            cfg.setExposedHeaders(Arrays.asList("Authorization"));  // Expose Authorization header to frontend
+            return cfg;
         };
     }
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();  // BCrypt for secure password storage
     }
 }

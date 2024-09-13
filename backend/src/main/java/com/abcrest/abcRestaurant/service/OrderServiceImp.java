@@ -21,9 +21,6 @@ public class OrderServiceImp implements OrderService {
     private OrderItemRepository orderItemRepository;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -31,27 +28,23 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public Order createOrder(OrderRequest orderRequest, User user) {
-        // Save the delivery address
-        Address deliveryAddress = orderRequest.getDeliveryAddress();
-        Address savedAddress = addressRepository.save(deliveryAddress);
-
-        // If the saved address is not already in the user's addresses, add it
-        if (!user.getAddresses().contains(savedAddress)) {
-            user.getAddresses().add(savedAddress);
-            userRepository.save(user);
-        }
+        // Use the address directly from the order request
+        String deliveryAddress = orderRequest.getDeliveryAddress();  // Now using a simple string
 
         // Create a new Order object
         Order createdOrder = new Order();
-        createdOrder.setCustomer(user);
+        createdOrder.setUserId(user.getId());  // Setting userId instead of a User object
         createdOrder.setCreatedAt(new Date());
         createdOrder.setOrderStatus("Pending");
-        createdOrder.setDeliveryAddress(savedAddress);
+        createdOrder.setDeliveryAddress(deliveryAddress);  // Set the delivery address as a string
 
+        // Fetch the user's cart
         Cart cart;
         try {
-            // Find the cart by user ID
-            cart = cartService.findCartByUserId(user.getId());
+            cart = cartService.findCartByCustomerId(user.getId());
+            if (cart == null || cart.getItems().isEmpty()) {
+                throw new RuntimeException("Cart is empty or not found for user ID: " + user.getId());
+            }
         } catch (Exception e) {
             throw new RuntimeException("Failed to find cart for user ID: " + user.getId(), e);
         }
@@ -69,15 +62,18 @@ public class OrderServiceImp implements OrderService {
             orderItems.add(savedOrderItem);
         }
 
+        // Calculate total items and price
+        int totalItems = cart.getItems().stream().mapToInt(CartItem::getQuantity).sum();
         Long totalPrice;
         try {
-            // Calculate the total price of the cart
             totalPrice = cartService.calculateCartTotals(cart);
         } catch (Exception e) {
             throw new RuntimeException("Failed to calculate cart totals for user ID: " + user.getId(), e);
         }
 
+        // Set order items, total items, and total price
         createdOrder.setItems(orderItems);
+        createdOrder.setTotalItem(totalItems);
         createdOrder.setTotalPrice(totalPrice);
 
         return orderRepository.save(createdOrder);
@@ -108,8 +104,10 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public List<Order> getUsersOrder(String userId) throws Exception {
-        // Get orders by customerId
-        return orderRepository.findByCustomerId(userId);
+        // Get orders by userId
+        return orderRepository.findByUserId(userId);
+
+
     }
 
     @Override

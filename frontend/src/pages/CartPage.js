@@ -1,74 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
-import './CartPage.css';  // Assuming you have some basic styles for the cart page
+import api from '../services/api'; // Assume this handles API calls
+import './CartPage.css';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [cart, setCart] = useState(null); // Cart state to store cart data
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
+  // Fetch cart data on page load
   useEffect(() => {
-    // Fetch cart items
-    const fetchCartItems = async () => {
+    const fetchCart = async () => {
+      setLoading(true);
+      setError('');
       try {
-        const response = await api.get('/api/cart');  // Fetch from backend
-        setCartItems(response.data.items);
-        setTotal(response.data.total);
+        const cartResponse = await api.get('/api/cart', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setCart(cartResponse.data);
       } catch (err) {
-        setError('Failed to load cart.');
+        console.error('Error fetching cart:', err.response?.data || err.message);
+        setError('Failed to load cart data: ' + (err.response?.data?.message || err.message || 'Unknown error occurred.'));
       }
+      setLoading(false);
     };
 
-    fetchCartItems();
-  }, []);
+    fetchCart();
+  }, [token]);
 
-  // Calculate total price after removing an item
-  const calculateTotal = (items) => {
-    const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    setTotal(totalPrice);
-  };
-
-  // Handle removing an item from the cart
-  const handleRemoveItem = async (itemId) => {
+  const handleQuantityChange = async (cartItemId, newQuantity) => {
     try {
-      await api.delete(`/api/cart/${itemId}`);  // Call backend to remove item
-      const updatedItems = cartItems.filter((item) => item.id !== itemId);
-      setCartItems(updatedItems);
-      calculateTotal(updatedItems);
+      const response = await api.put('/api/cart-item/update', { cartItemId, quantity: newQuantity }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCart(prevCart => ({
+        ...prevCart,
+        items: prevCart.items.map(item => item.id === cartItemId ? response.data : item)
+      }));
     } catch (err) {
-      setError('Failed to remove item.');
+      console.error('Error updating item quantity:', err.response?.data || err.message);
+      setError('Failed to update item: ' + (err.response?.data?.message || err.message || 'Unknown error occurred.'));
     }
   };
 
-  // Handle checkout process
-  const handleCheckout = () => {
-    navigate('/payment');  // Redirect to payment page
+  const handleRemoveItem = async (cartItemId) => {
+    try {
+      await api.delete(`/api/cart-item/${cartItemId}/remove`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCart(prevCart => ({
+        ...prevCart,
+        items: prevCart.items.filter(item => item.id !== cartItemId)
+      }));
+    } catch (err) {
+      console.error('Error removing item:', err.response?.data || err.message);
+      setError('Failed to remove item: ' + (err.response?.data?.message || err.message || 'Unknown error occurred.'));
+    }
   };
 
+  const handleCheckout = () => {
+    navigate('/checkout'); // Redirect to checkout page
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (!cart || cart.items.length === 0) return <p>Your cart is empty.</p>;
+
   return (
-    <div className="cart-page">
-      <h2>Shopping Cart</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <div>
-          <ul>
-            {cartItems.map((item) => (
-              <li key={item.id} className="cart-item">
-                <h3>{item.name}</h3>
-                <p>Price: ${item.price.toFixed(2)}</p>
-                <p>Quantity: {item.quantity}</p>
-                <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
-              </li>
-            ))}
-          </ul>
-          <h3>Total: ${total.toFixed(2)}</h3>
-          <button onClick={handleCheckout}>Proceed to Checkout</button>
-        </div>
-      )}
+    <div>
+      <h1>Your Cart</h1>
+      <ul>
+        {cart.items.map(item => (
+          <li key={item.id}>
+            {item.food.item_name} - ${item.food.price}
+            <input
+              type="number"
+              min="1"
+              value={item.quantity}
+              onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+            />
+            <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
+            <p>Total: ${item.totalPrice}</p>
+          </li>
+        ))}
+      </ul>
+      <h2>Total: ${cart.total}</h2>
+      <button onClick={handleCheckout}>Proceed to Checkout</button>
     </div>
   );
 };
